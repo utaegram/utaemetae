@@ -6,3 +6,6 @@ data/opinet_raw.txt
 data/merchants_114.json
 data/geo_114.json
 data/unmatched.json
+data/stations_114_old.json
+data/excluded.json
+data/chak_match.json

@@ -39,9 +39,9 @@ out = []
 for s in base:
     lat, lng = katec_to_wgs84(s['x'], s['y'])
     p = prices.get(s['id'], s['prices'])  # 이번에 못 받으면 이전 값 유지
-    out.append({'id': s['id'], 'name': s['name'], 'merchant': s['merchant_name'], 'addr': s['addr'],
+    out.append({'id': s['id'], 'name': s['name'], 'merchant': s['chak_name'], 'addr': s['addr'],
                 'brand': BRAND.get(s['brand'], s['brand']), 'lat': round(lat, 6), 'lng': round(lng, 6),
-                'gas': p.get('B027'), 'diesel': p.get('D047'), 'lpg': p.get('K015'), 'verify': s.get('verify', False)})
+                'gas': p.get('B027'), 'diesel': p.get('D047'), 'lpg': p.get('K015')})
 kst = datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d %H:%M')
 (ROOT / 'web').mkdir(exist_ok=True)
 if not prices:  # 한 곳도 못 받았으면(호출 한도 초과 등) 기존 파일과 기준 시각을 그대로 둔다

@@ -27,6 +27,8 @@ function distKm(a, b) {
 const won = (n) => n.toLocaleString('ko-KR');
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const shortName = (n) => n.replace(/^\s*(\(주\)|㈜|주식회사)\s*/, '');
+const bare = (n) => n.replace(/\(주\)|㈜|주식회사|\s/g, '').toLowerCase();
+const sameName = (a, b) => bare(a) === bare(b);
 
 function visible() {
   const f = state.fuel;
@@ -66,13 +68,13 @@ function render() {
     const dist = s.d != null ? `${s.d < 1 ? Math.round(s.d * 1000) + 'm' : s.d.toFixed(1) + 'km'} · ` : '';
     return `<li class="item ${s.cheap ? 'top3' : ''} ${state.sel === s.id ? 'sel' : ''}" data-id="${s.id}">
       <span class="rank">${state.sort === 'price' || !state.me ? s.priceRank : i + 1}</span>
-      <span class="name">${esc(shortName(s.name))}${s.verify ? '<span class="chk">확인필요</span>' : ''}</span>
+      <span class="name">${esc(shortName(s.name))}</span>
       <span class="price">${won(s[f])}<small>원</small></span>
-      <span class="meta">${dist}${esc(s.brand || '')} · ${esc(s.addr.replace(/^충청남도 천안시 /, ''))}</span>
+      <span class="meta">${dist}${esc(s.brand || '')} · ${esc(s.addr.replace(/^(충청남도 )?천안시 /, ''))}</span>
       <div class="actions">
         <a class="go" href="${kakao}" target="_blank" rel="noopener">카카오맵 길찾기</a>
         <a href="${naver}" target="_blank" rel="noopener">네이버지도</a>
-        ${s.verify ? `<span class="meta" style="white-space:normal">가맹 등록명: ${esc(s.merchant)}</span>` : ''}
+        ${s.merchant && sameName(s.merchant, s.name) ? '' : `<span class="meta" style="white-space:normal">천안사랑카드 가맹 등록명: ${esc(s.merchant)}</span>`}
       </div>
     </li>`;
   }).join('');
