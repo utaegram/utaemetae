@@ -67,8 +67,6 @@ function render() {
   const list = $('#list');
   if (!rows.length) { list.innerHTML = '<li class="empty">표시할 주유소가 없어요</li>'; return; }
   list.innerHTML = rows.map((s, i) => {
-    const kakao = `https://map.kakao.com/link/to/${encodeURIComponent(shortName(s.name))},${s.lat},${s.lng}`;
-    const naver = `https://map.naver.com/p/search/${encodeURIComponent(shortName(s.name))}`;
     const dist = s.d != null ? `${s.d < 1 ? Math.round(s.d * 1000) + 'm' : s.d.toFixed(1) + 'km'} · ` : '';
     const badge = s.best ? '<span class="badge">최저가</span>' : s.cheap ? '<span class="badge">TOP3</span>' : '';
     return `<li class="item ${s.cheap ? 'top3' : ''} ${s.best ? 'best' : ''} ${state.sel === s.id ? 'sel' : ''}" data-id="${s.id}">
@@ -77,8 +75,11 @@ function render() {
       <span class="price">${won(s[f])}<small>원</small></span>
       <span class="meta">${dist}${esc(s.brand || '')} · ${esc(s.addr.replace(/^(충청남도 )?천안시 /, ''))}</span>
       <div class="actions">
-        <a class="go" href="${kakao}" target="_blank" rel="noopener">카카오맵 길찾기</a>
-        <a href="${naver}" target="_blank" rel="noopener">네이버지도</a>
+        <a class="go" href="#" data-nav="kakao">카카오맵 길안내</a>
+        <a class="go" href="#" data-nav="naver">네이버지도 길안내</a>
+        <a href="#" data-nav="tmap">티맵</a>
+        <a href="#" data-nav="copy">주소 복사</a>
+        <span class="meta" style="white-space:normal">📍 ${esc(fullAddr(s))}</span>
         ${s.merchant && sameName(s.merchant, s.name) ? '' : `<span class="meta" style="white-space:normal">천안사랑카드 가맹 등록명: ${esc(s.merchant)}</span>`}
       </div>
     </li>`;
@@ -96,7 +97,49 @@ function select(id, fromMap) {
   }
 }
 
+// ── 길안내: 상호명 검색이 아니라 주유소의 정확한 좌표(오피넷 위치)로 목적지를 지정 ──
+const fullAddr = (s) => (s.addr.startsWith('충청남도') ? s.addr : '충청남도 ' + s.addr).replace(/\s+/g, ' ').trim();
+function openApp(appUrl, webUrl) {
+  // 앱이 있으면 앱으로, 1.5초 안에 화면이 그대로면(앱 없음) 웹으로
+  let left = false;
+  const onHide = () => { left = true; };
+  document.addEventListener('visibilitychange', onHide, { once: true });
+  window.location.href = appUrl;
+  setTimeout(() => {
+    document.removeEventListener('visibilitychange', onHide);
+    if (!left && !document.hidden) {
+      if (webUrl) window.location.href = webUrl;
+      else alert('앱이 설치되어 있지 않은 것 같아요.');
+    }
+  }, 1500);
+}
+function navigate(kind, s) {
+  const name = encodeURIComponent(shortName(s.name));
+  const { lat, lng } = s;
+  if (kind === 'kakao') {
+    openApp(`kakaomap://route?ep=${lat},${lng}&by=CAR`,
+      `https://map.kakao.com/link/to/${name},${lat},${lng}`);
+  } else if (kind === 'naver') {
+    openApp(`nmap://route/car?dlat=${lat}&dlng=${lng}&dname=${name}&appname=${encodeURIComponent(location.hostname || 'cheonsa')}`,
+      `https://map.naver.com/p/search/${encodeURIComponent(fullAddr(s))}`);
+  } else if (kind === 'tmap') {
+    openApp(`tmap://route?goalname=${name}&goalx=${lng}&goaly=${lat}`, null);
+  } else if (kind === 'copy') {
+    const text = fullAddr(s);
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+      .then(() => alert('주소를 복사했어요\n' + text))
+      .catch(() => prompt('주소를 복사해 주세요', text));
+  }
+}
+
 $('#list').addEventListener('click', (e) => {
+  const nav = e.target.closest('[data-nav]');
+  if (nav) {
+    e.preventDefault();
+    const s = state.stations.find((x) => x.id === nav.closest('.item').dataset.id);
+    if (s) navigate(nav.dataset.nav, s);
+    return;
+  }
   if (e.target.closest('a')) return;
   const li = e.target.closest('.item');
   if (li) select(li.dataset.id, false);
