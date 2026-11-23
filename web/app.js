@@ -36,7 +36,11 @@ function visible() {
   const byPrice = [...rows].sort((a, b) => a[f] - b[f]);
   const cut = byPrice.length ? byPrice[Math.min(2, byPrice.length - 1)][f] : 0; // 3위 가격 이하(동률 포함)
   const cheapIds = new Set(byPrice.filter((s) => s[f] <= cut).map((s) => s.id));
-  rows.forEach((s) => { s.cheap = cheapIds.has(s.id); s.priceRank = byPrice.indexOf(s) + 1; });
+  const min = byPrice.length ? byPrice[0][f] : 0;
+  rows.forEach((s) => {
+    s.cheap = cheapIds.has(s.id); s.best = s[f] === min;
+    s.priceRank = byPrice.filter((x) => x[f] < s[f]).length + 1; // 동률은 같은 순위
+  });
   if (state.sort === 'dist' && state.me) rows.sort((a, b) => a.d - b.d);
   else rows.sort((a, b) => a[f] - b[f] || (a.d ?? 0) - (b.d ?? 0));
   return rows;
@@ -50,11 +54,11 @@ function render() {
   const far = map.getZoom() < 14;
   for (const s of rows) {
     const isSel = state.sel === s.id;
-    const cls = ['pin', s.cheap ? 'cheap' : '', isSel ? 'sel' : ''].join(' ');
+    const cls = ['pin', s.cheap ? 'cheap' : '', s.best ? 'best' : '', isSel ? 'sel' : ''].join(' ');
     const html = far && !s.cheap && !isSel ? '<span class="dot"></span>' : `<span class="${cls}">${won(s[f])}</span>`;
     const m = L.marker([s.lat, s.lng], {
       icon: L.divIcon({ className: '', html, iconSize: null }),
-      zIndexOffset: s.cheap ? 1000 : state.sel === s.id ? 2000 : 0,
+      zIndexOffset: isSel ? 3000 : s.best ? 2000 : s.cheap ? 1000 : 0,
       title: shortName(s.name),
     }).addTo(layer);
     m.on('click', () => select(s.id, true));
@@ -66,9 +70,10 @@ function render() {
     const kakao = `https://map.kakao.com/link/to/${encodeURIComponent(shortName(s.name))},${s.lat},${s.lng}`;
     const naver = `https://map.naver.com/p/search/${encodeURIComponent(shortName(s.name))}`;
     const dist = s.d != null ? `${s.d < 1 ? Math.round(s.d * 1000) + 'm' : s.d.toFixed(1) + 'km'} · ` : '';
-    return `<li class="item ${s.cheap ? 'top3' : ''} ${state.sel === s.id ? 'sel' : ''}" data-id="${s.id}">
+    const badge = s.best ? '<span class="badge">최저가</span>' : s.cheap ? '<span class="badge">TOP3</span>' : '';
+    return `<li class="item ${s.cheap ? 'top3' : ''} ${s.best ? 'best' : ''} ${state.sel === s.id ? 'sel' : ''}" data-id="${s.id}">
       <span class="rank">${state.sort === 'price' || !state.me ? s.priceRank : i + 1}</span>
-      <span class="name">${esc(shortName(s.name))}</span>
+      <span class="name">${badge}${esc(shortName(s.name))}</span>
       <span class="price">${won(s[f])}<small>원</small></span>
       <span class="meta">${dist}${esc(s.brand || '')} · ${esc(s.addr.replace(/^(충청남도 )?천안시 /, ''))}</span>
       <div class="actions">
