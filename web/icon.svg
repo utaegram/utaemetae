@@ -1,1 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#0f766e"/><path d="M256 96c-62 86-112 150-112 214a112 112 0 0 0 224 0c0-64-50-128-112-214z" fill="#fff"/><text x="256" y="350" font-family="Malgun Gothic, Apple SD Gothic Neo, sans-serif" font-size="120" font-weight="700" fill="#0f766e" text-anchor="middle">천</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#99f6e4"/>
+      <stop offset="1" stop-color="#2dd4bf"/>
+    </linearGradient>
+    <radialGradient id="skin" cx=".42" cy=".38" r=".7">
+      <stop offset="0" stop-color="#ffe7d1"/>
+      <stop offset="1" stop-color="#ffc9a3"/>
+    </radialGradient>
+  </defs>
+  <g stroke="#4a2f22" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#bg)" stroke="none"/>
+  <!-- 반짝이 -->
+  <path d="M84 120 l8 -20 l8 20 l20 8 l-20 8 l-8 20 l-8 -20 l-20 -8z" fill="#fff" stroke="none" opacity=".9"/>
+  <path d="M424 96 l5 -13 l5 13 l13 5 l-13 5 l-5 13 l-5 -13 l-13 -5z" fill="#fff" stroke="none" opacity=".9"/>
+
+  <!-- 날개 -->
+  <path d="M196 300 C140 236 64 262 74 318 C52 344 82 386 122 374 C126 410 176 414 192 380 C214 372 218 334 196 300Z" fill="#fff"/>
+  <path d="M316 300 C372 236 448 262 438 318 C460 344 430 386 390 374 C386 410 336 414 320 380 C298 372 294 334 316 300Z" fill="#fff"/>
+  <path d="M108 318 C130 314 150 322 166 336 M132 366 C150 358 168 356 184 362" fill="none" stroke-width="6" opacity=".55"/>
+  <path d="M404 318 C382 314 362 322 346 336 M380 366 C362 358 344 356 328 362" fill="none" stroke-width="6" opacity=".55"/>
+
+  <!-- 주유 호스 -->
+  <path d="M352 352 C430 344 452 420 396 452 C356 474 300 470 270 456" fill="none" stroke="#334155" stroke-width="16"/>
+
+  <!-- 몸 -->
+  <ellipse cx="256" cy="372" rx="80" ry="72" fill="#fff"/>
+  <path d="M206 410 Q256 436 306 410" fill="none" stroke-width="6" opacity=".45"/>
+  <ellipse cx="226" cy="442" rx="26" ry="18" fill="url(#skin)"/>
+  <ellipse cx="288" cy="442" rx="26" ry="18" fill="url(#skin)"/>
+
+  <!-- 주유건 -->
+  <g transform="rotate(30 360 360)">
+    <path d="M330 376 L326 420 Q326 432 338 432 L352 432 Q362 432 362 420 L360 376Z" fill="#ea580c"/>
+    <rect x="312" y="326" width="108" height="54" rx="18" fill="#f97316"/>
+    <rect x="414" y="340" width="66" height="22" rx="8" fill="#cbd5e1"/>
+    <path d="M370 380 Q372 404 394 404" fill="none"/>
+  </g>
+  <!-- 기름 방울 -->
+  <path d="M424 424 C424 424 408 446 408 456 a16 16 0 0 0 32 0 C440 446 424 424 424 424Z" fill="#fbbf24"/>
+  <!-- 손 -->
+  <circle cx="334" cy="352" r="20" fill="url(#skin)"/>
+  <circle cx="300" cy="384" r="18" fill="url(#skin)"/>
+
+  <!-- 머리 -->
+  <circle cx="256" cy="214" r="104" fill="url(#skin)"/>
+  <path d="M248 112 C236 86 276 80 270 104 C266 120 246 118 252 104" fill="none" stroke-width="8"/>
+  <!-- 눈: 웃는 눈 -->
+  <path d="M202 212 Q220 192 238 212" fill="none" stroke-width="10"/>
+  <path d="M274 212 Q292 192 310 212" fill="none" stroke-width="10"/>
+  <!-- 볼 -->
+  <ellipse cx="192" cy="246" rx="22" ry="13" fill="#fb7185" stroke="none" opacity=".55"/>
+  <ellipse cx="320" cy="246" rx="22" ry="13" fill="#fb7185" stroke="none" opacity=".55"/>
+  <!-- 입 -->
+  <path d="M236 246 Q256 274 276 246 Z" fill="#e11d48" stroke-width="7"/>
+
+  <!-- 천사 링 -->
+  <ellipse cx="256" cy="74" rx="74" ry="20" fill="none" stroke="#f59e0b" stroke-width="22"/>
+  <ellipse cx="256" cy="74" rx="74" ry="20" fill="none" stroke="#fde047" stroke-width="10"/>
+  </g>
+</svg>

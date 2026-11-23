@@ -1,5 +1,5 @@
 // 오프라인 대비 캐시. 평소엔 항상 네트워크에서 최신 파일·가격을 받음
-const CACHE = 'cheonsa-v2';
+const CACHE = 'cheonsa-v3';
 const SHELL = ['./', 'index.html', 'style.css', 'app.js', 'manifest.json', 'icon.svg'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener('activate', (e) => {

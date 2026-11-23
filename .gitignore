@@ -9,3 +9,5 @@ data/unmatched.json
 data/stations_114_old.json
 data/excluded.json
 data/chak_match.json
+icon_options/
+scripts/make_icons.py
