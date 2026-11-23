@@ -1,0 +1,8 @@
+.env
+.claude/
+__pycache__/
+# 수집 원본(용량 큼, 공개 불필요) — data/stations.json 만 올림
+data/opinet_raw.txt
+data/merchants_114.json
+data/geo_114.json
+data/unmatched.json

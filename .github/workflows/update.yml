@@ -1,0 +1,44 @@
+# 3시간마다 오피넷 가격을 받아 web/stations.json 을 갱신하고 GitHub Pages 로 배포
+name: 가격 갱신 및 배포
+
+on:
+  schedule:
+    - cron: '7 */3 * * *'   # UTC 기준 3시간마다 (한국시간 0:07, 3:07, 6:07 ...)
+  workflow_dispatch:         # Actions 탭에서 수동 실행
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 가격 받기
+        if: github.event_name != 'push'
+        env:
+          OPINET_KEY: ${{ secrets.OPINET_KEY }}
+        run: python scripts/update_prices.py || echo "가격 갱신 실패 - 기존 자료로 배포"
+      - name: 변경 사항 커밋
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "price-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add web/stations.json
+          git diff --cached --quiet || (git commit -m "가격 갱신 $(TZ=Asia/Seoul date '+%m-%d %H:%M')" && git push)
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+      - uses: actions/deploy-pages@v4

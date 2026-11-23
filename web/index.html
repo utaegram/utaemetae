@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>천사주유소</title>
+<meta name="description" content="천안사랑카드 되는 주유소와 실시간 기름값">
+<meta name="theme-color" content="#0f766e">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="title">
+    <h1>천사주유소</h1>
+    <span class="sub">천안사랑카드 되는 주유소</span>
+  </div>
+  <button id="locate" class="locate" aria-label="내 위치">◎ 내 위치</button>
+</header>
+
+<nav class="fuel" role="tablist">
+  <button role="tab" data-fuel="gas" aria-selected="true">휘발유</button>
+  <button role="tab" data-fuel="diesel" aria-selected="false">경유</button>
+  <button role="tab" data-fuel="lpg" aria-selected="false">LPG</button>
+</nav>
+
+<main class="layout">
+  <div id="map" class="map"></div>
+  <section class="panel">
+    <div class="bar">
+      <span id="count" class="count"></span>
+      <div class="sort">
+        <button data-sort="price" class="on">가격순</button>
+        <button data-sort="dist">거리순</button>
+      </div>
+    </div>
+    <ol id="list" class="list"></ol>
+    <p class="note">
+      가격: 오피넷(한국석유공사) · <span id="updated"></span> 기준<br>
+      가맹 정보는 공개 자료로 정리한 것이라 바뀌었을 수 있어요. <b>결제 전 주유소에 확인</b>해 주세요.
+      <span class="chk">확인필요</span>는 가맹점 등록명과 주유소 상호가 달라 위치로 맞춘 곳이에요.
+    </p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
