@@ -26,12 +26,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: 가격 받기
-        if: github.event_name != 'push'
         env:
           OPINET_KEY: ${{ secrets.OPINET_KEY }}
         run: python scripts/update_prices.py || echo "가격 갱신 실패 - 기존 자료로 배포"
       - name: 변경 사항 커밋
-        if: github.event_name != 'push'
         run: |
           git config user.name "price-bot"
           git config user.email "actions@users.noreply.github.com"
